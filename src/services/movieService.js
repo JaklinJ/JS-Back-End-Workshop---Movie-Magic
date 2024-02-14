@@ -8,20 +8,22 @@ exports.getAll =  () => {
 
 };
 
-exports.search = async (title, genre, year) => {
-  let result = await Movie.find().lean() // TODO: Not ideal, filter result in mongodb
+exports.search = (title, genre, year) => {
+  let query = {}; // TODO: Not ideal, filter result in mongodb
 
   if (title) {
-    result = result.filter(movie => movie.title.toLowerCase().includes(title.toLowerCase()));
+   
+    query.title = new RegExp(title, 'i');
   };
   if (genre) {
-    result = result.filter(movie => movie.genre.toLowerCase() === genre.toLowerCase());
+   
+    query.genre =  genre.toLowerCase();
   };
   if (year) {
-    result = result.filter(movie => movie.year.toLowerCase() === year.toLowerCase());
+    query.year = year;
   };
 
-  return result;
+  return Movie.find(query);
 }
 
 exports.getOne = (movieId) => {
